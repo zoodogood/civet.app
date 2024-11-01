@@ -10,14 +10,14 @@ CONVENTIONAL FINITE STATES
 
 function main()
 	[...new Glob("folder/events/**/[^_]*.civet").scanSync()]
-	|> process_empty
+	|> disallow_empty
 	|> .map `@root/${&}`
 	|> .map import .
 	|> await.all
 	|> .map new .Event()
 	|> .forEach .listen()
 
-function process_empty<T>(list: T[]): T[]
+function disallow_empty<T>(list: T[]): T[]
 	return list if list.length
 	throw new Error `main doesn't load any event`
 
