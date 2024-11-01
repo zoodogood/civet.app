@@ -1,0 +1,13 @@
+{client} from @/client/singletone.civet
+assert from assert
+
+export class Event {
+	listen()
+		assert client.readyAt, "impossibly"
+		@.onAvailable()
+
+	onAvailable()
+		console.info "Я запущен!"		
+}
+
+	

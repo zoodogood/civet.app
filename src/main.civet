@@ -1,0 +1,26 @@
+###
+Конечные результаты
+1. Ошибка не найдено файлов событий
+2. Ошибка при загрузке одного из модулей произошла ошибка (крах программы)
+3. Ошибка при выполнении кода одного из событий (крах программы)
+4. Все события прослушиваются успешно
+###
+
+{Glob} from bun
+
+function main()
+	[...new Glob("folder/events/**/[^_]*.civet").scanSync()]
+	|> process_empty
+	|> .map `@root/${&}`
+	|> .map import .
+	|> await.all
+	|> .map new .Event()
+	|> .forEach .listen()
+
+function process_empty<T>(list: T[]): T[]
+	return list if list.length
+	throw new Error `main doesn't load any event`
+
+	
+
+await main();

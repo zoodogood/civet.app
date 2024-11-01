@@ -1,0 +1,42 @@
+###
+Конечные результаты:
+1. Ошибка токен не установлен
+2.
+	2.1. Ошибка: вернуть ошибку невалидный токен
+	2.2. Ошибка: вернуть неизвестную ошибку
+3. Успех экспортировать уже запущенный экземпляр клиента
+
+Дополнительные эффекты:
+Вывод информации при инициализации и готовности экземпляра клиента
+###
+
+{Client, GatewayIntentBits} from discord.js
+assert from assert
+
+console.info "Client init"
+
+
+client := new Client 
+	intents: (GatewayIntentBits |> Object.values) as number[]
+
+CLIENT_TOKEN := "CLIENT_TOKEN"
+CLIENT_TOKEN
+	|> Bun.env[&]
+	||> assert ., `The env «${CLIENT_TOKEN}» is not setted`
+	|> client.login
+	|> .catch (err) => switch err
+		{code: "TokenInvalid"} 
+			then throw new Error(`Env «${CLIENT_TOKEN}» is invalid`)
+		default throw err
+
+
+
+function when_ready()
+	return true if client.readyAt
+	{promise, resolve} := Promise.withResolvers()
+	client.once "ready", resolve
+	promise
+
+await when_ready()
+console.info "Client was ready"
+export { client }
