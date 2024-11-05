@@ -19,14 +19,14 @@ console.info "Client init"
 client := new Client 
 	intents: (GatewayIntentBits |> Object.values) as number[]
 
-CLIENT_TOKEN := "CLIENT_TOKEN"
-CLIENT_TOKEN
+SECRET_ENV := "CLIENT_TOKEN"
+SECRET_ENV
 	|> Bun.env[&]
-	||> assert ., `The env «${CLIENT_TOKEN}» is not setted`
+	||> assert ., `The env «${SECRET_ENV}» is not setted`
 	|> client.login
 	|> .catch (err) => switch err
 		{code: "TokenInvalid"} 
-			then throw new Error(`Env «${CLIENT_TOKEN}» is invalid`)
+			then throw new Error(`Env «${SECRET_ENV}» is invalid`)
 		default throw err
 
 
